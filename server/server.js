@@ -52,7 +52,7 @@ app.post('/sensor-data', (req, res) => {
 app.post('/pin-control',(req, res) => {
     const { value } = req.body;
     console.log("PIN: ",value);
-    client.publish(topic, `Pin Control Command received : ${value}`, { qos: 0, retain: false }, (error) => {
+    client.publish(topic, `${value}`, { qos: 0, retain: false }, (error) => {
         if (error) {
           console.error(error)
         }
