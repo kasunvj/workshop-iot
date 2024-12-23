@@ -1,12 +1,14 @@
 #include "U8glib.h"
 U8GLIB_ST7920_192X32_1X u8g(13, 11, 10);	// SPI Com: SCK = en = 13, MOSI = rw = 11, CS = di = 10
-int sound_sensor = A2; //assign to pin A2
+int sound_sensor = A2; 
+int light_sensor = A3; 
 
-void draw(const char* message) {
+void draw(const char* message1,const char* message2) {
   // graphic commands to redraw the complete screen should be placed here  
   u8g.setFont(u8g_font_unifont);
   //u8g.setFont(u8g_font_osb21);
-  u8g.drawStr( 0, 22, message);
+  u8g.drawStr( 0, 11, message1);
+  u8g.drawStr( 0, 25, message2);
 }
 
 void setup(void) {
@@ -36,16 +38,21 @@ void setup(void) {
 
 void loop(void) {
   int soundValue = analogRead(sound_sensor);
+  int lightValue = analogRead(light_sensor);
   char soundDisplay[20];
+  char lightDisplay[20];
   sprintf(soundDisplay, "Sound: %d", soundValue);
-  Serial.println(soundValue,HEX);
+  sprintf(lightDisplay, "Light: %d", lightValue);
+  Serial.print(soundValue);
+  Serial.print(" ");
+  Serial.println(lightValue);
 
   u8g.firstPage();  
   do {
-    draw(soundDisplay);
+    draw(soundDisplay,lightDisplay);
   } while( u8g.nextPage() );
   
   // rebuild the picture after some delay
-  delay(50);
+  delay(200);
 }
 
