@@ -43,31 +43,31 @@ client.on('message', (topic, payload) => {
 
   if(parts[0] == '1'){
     console.log(`pin ${parts[0]} ${parts[1]}`);
-    if(parts[0] == 'on')
+    if(parts[1] == "on")
       rpio.write(pin1, rpio.HIGH);
     else
       rpio.write(pin1, rpio.LOW);
   }
   if(parts[0] == '2'){
     console.log(`pin ${parts[0]} ${parts[1]}`);
-    if(parts[0] == 'on')
+    if(parts[1] == "on")
       rpio.write(pin2, rpio.HIGH);
     else
       rpio.write(pin2, rpio.LOW);
   }
   if(parts[0] == '3'){
     console.log(`pin ${parts[0]} ${parts[1]}`);
-    if(parts[0] == 'on')
-      rpio.write(pin2, rpio.HIGH);
+    if(parts[1] == "on")
+      rpio.write(pin3, rpio.HIGH);
     else
-      rpio.write(pin2, rpio.LOW);
+      rpio.write(pin3, rpio.LOW);
   }
   if(parts[0]== '4'){
     console.log(`pin ${parts[0]} ${parts[1]}`);
-    if(parts[0] == 'on')
-      rpio.write(pin2, rpio.HIGH);
+    if(parts[1] == "on")
+      rpio.write(pin4, rpio.HIGH);
     else
-      rpio.write(pin2, rpio.LOW);
+      rpio.write(pin4, rpio.LOW);
   }
 })
 
