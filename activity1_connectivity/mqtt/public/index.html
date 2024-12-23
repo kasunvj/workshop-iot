@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Temperature Histogram</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Real-Time CPU Temperature Histogram</h1>
+    <canvas id="temperatureChart" width="800" height="400"></canvas>
+
+    <script>
+        const socket = io();
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        const temperatureData = [];
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // Timestamps
+                datasets: [{
+                    label: 'CPU Temperature (°C)',
+                    data: [],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }],
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Time' } },
+                    y: { title: { display: true, text: 'Temperature (°C)' }, min: 0 },
+                },
+            },
+        });
+
+        // Update chart when new data is received
+        socket.on('temperatureUpdate', (data) => {
+            const time = new Date(data.timestamp).toLocaleTimeString();
+            temperatureData.push(data.temperature);
+
+            chart.data.labels.push(time);
+            chart.data.datasets[0].data.push(data.temperature);
+
+            if (chart.data.labels.length > 20) { // Limit to 20 data points
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+            }
+
+            chart.update();
+        });
+    </script>
+</body>
+</html>
