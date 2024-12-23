@@ -50,9 +50,10 @@ app.post('/sensor-data', (req, res) => {
 });
 
 app.post('/pin-control',(req, res) => {
-    const { value } = req.body;
+    const { value,state } = req.body;
     console.log("PIN: ",value);
-    client.publish(topic, `${value}`, { qos: 0, retain: false }, (error) => {
+    console.log("   state: ",state);
+    client.publish(topic, `${value},${state}`, { qos: 0, retain: false }, (error) => {
         if (error) {
           console.error(error)
         }
