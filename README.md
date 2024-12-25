@@ -167,6 +167,7 @@ Run the below script to:
            "value": 75.3
        }
        ```
+      - **URL:** `http://3.25.103.113:3000/pin-control`
       - **Body (JSON) - GPIO:**
         ```json
         {
