@@ -19,10 +19,18 @@ const client = mqtt.connect(connectUrl, {
 const topic = '/nodejs/mqtt'
 
 rpio.init({ mapping: 'gpio' });
-rpio.open(4, rpio.INPUT, rpio.PULL_DOWN);
+const pin1 = 2;
+const pin2 = 3;
+const pin3 = 4;
+const pin4 = 27;
+
+rpio.open(pin1, rpio.OUTPUT, rpio.LOW);
+rpio.open(pin2, rpio.OUTPUT, rpio.LOW);
+rpio.open(pin3, rpio.OUTPUT, rpio.LOW);
+rpio.open(pin4, rpio.OUTPUT, rpio.LOW);
 
 client.on('connect', () => {
-  console.log(`Connected $clientId`)
+  console.log(`Connected ${clientId}`)
 
   client.subscribe([topic], () => {
     console.log(`Subscribe to topic '${topic}'`)
@@ -31,8 +39,39 @@ client.on('connect', () => {
 
 client.on('message', (topic, payload) => {
   console.log('Received Message:', topic, payload.toString())
+  const parts = payload.toString().split(',');
+
+  if(parts[0] == '1'){
+    console.log(`pin ${parts[0]} ${parts[1]}`);
+    if(parts[1] == "on")
+      rpio.write(pin1, rpio.HIGH);
+    else
+      rpio.write(pin1, rpio.LOW);
+  }
+  if(parts[0] == '2'){
+    console.log(`pin ${parts[0]} ${parts[1]}`);
+    if(parts[1] == "on")
+      rpio.write(pin2, rpio.HIGH);
+    else
+      rpio.write(pin2, rpio.LOW);
+  }
+  if(parts[0] == '3'){
+    console.log(`pin ${parts[0]} ${parts[1]}`);
+    if(parts[1] == "on")
+      rpio.write(pin3, rpio.HIGH);
+    else
+      rpio.write(pin3, rpio.LOW);
+  }
+  if(parts[0]== '4'){
+    console.log(`pin ${parts[0]} ${parts[1]}`);
+    if(parts[1] == "on")
+      rpio.write(pin4, rpio.HIGH);
+    else
+      rpio.write(pin4, rpio.LOW);
+  }
 })
 
+/*
 setInterval(() => {
   const value = rpio.read(4);
   //console.log(`${value}`);
@@ -44,6 +83,7 @@ setInterval(() => {
     })
   }
 }, 100);
+*/
 
 process.on('SIGINT', () => {
     console.log('\nCleaning up GPIO...');

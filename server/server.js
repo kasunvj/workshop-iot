@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mqtt = require('mqtt');
 const { WebSocketServer } = require('ws'); // Import WebSocketServer
 const app = express();
 const port = 3000;
@@ -19,6 +20,23 @@ function broadcast(data) {
     });
 }
 
+//settin up mqtt
+const host = 'broker.emqx.io'
+const portMqtt = '1883'
+const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
+
+const connectUrl = `mqtt://${host}:${portMqtt}`
+
+const client = mqtt.connect(connectUrl, {
+  clientId,
+  clean: true,
+  connectTimeout: 4000,
+  username: 'emqx',
+  password: 'public',
+  reconnectPeriod: 1000,
+})
+const topic = '/nodejs/mqtt'
+
 // Handle sensor data received from a POST request
 app.post('/sensor-data', (req, res) => {
     const { value } = req.body;
@@ -31,9 +49,21 @@ app.post('/sensor-data', (req, res) => {
     }
 });
 
+app.post('/pin-control',(req, res) => {
+    const { value,state } = req.body;
+    console.log("PIN: ",value);
+    console.log("   state: ",state);
+    client.publish(topic, `${value},${state}`, { qos: 0, retain: false }, (error) => {
+        if (error) {
+          console.error(error)
+        }
+      })
+    res.json({ message: 'Control data received', value });
+});
+
 // Handle WebSocket connections
-const server = app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+const server = app.listen(port,'0.0.0.0', () => {
+    console.log(`Server running at 0.0.0.0:${port}`);
 });
 
 server.on('upgrade', (request, socket, head) => {
