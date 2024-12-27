@@ -113,7 +113,7 @@ activity2_sound/arduino/arduino/arduino.ino
 
 ---
 
-### 2.2 `Internet of a Thing` That Can Be Controlled Remotely
+### 2.2 `Internet of a Thing` Controlling Remotely
 
 - [x] Communicate with a server via API 📬
 - [x] Hosting a server in `Amazon EC2` ☁️
